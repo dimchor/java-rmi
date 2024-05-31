@@ -3,7 +3,7 @@ package main.java;
 /**
  * HRImplementation
  */
-public class HRImplementation {
-
+public class HRImplementation implements HRInterface {
+    
     
 }
