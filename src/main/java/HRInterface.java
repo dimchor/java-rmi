@@ -10,7 +10,7 @@ public interface HRInterface {
     /* Character = room type, Integer = available rooms left */
     Map<Character, Integer> listRooms();
     /* Accepts room type, returns room cost */
-    int getRoomCost(char c);
+    int getRoomCost(char c) throws Exception;
     /* Books a room, if available. Accepts room type, number of rooms and the 
        guest's name. Returns true if successful otherwise false. */
     Boolean bookRoom(char type, int number, String name);
