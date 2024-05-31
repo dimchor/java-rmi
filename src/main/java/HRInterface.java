@@ -11,4 +11,5 @@ public interface HRInterface {
     int getRoomCost(char c);
     Boolean bookRoom(char type, int number, String name);
     Vector<IGuest> listGuests();
+    Boolean cancelRoom(char type, int number, String name);
 }
