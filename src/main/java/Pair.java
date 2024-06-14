@@ -1,6 +1,8 @@
 package main.java;
 
-public class Pair<F, S> {
+import java.io.Serializable;
+
+public class Pair<F, S> implements Serializable  {
     final public F FIRST;
     final public S SECOND;
 

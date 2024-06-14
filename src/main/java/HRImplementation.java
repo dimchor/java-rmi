@@ -1,14 +1,14 @@
 package main.java;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * HRImplementation
  */
-public class HRImplementation implements HRInterface {
+public class HRImplementation extends java.rmi.server.UnicastRemoteObject 
+    implements HRInterface {
+    
     final static int ROOM_TYPE_A_NUMBER = 40;
     final static int ROOM_TYPE_B_NUMBER = 35;
     final static int ROOM_TYPE_C_NUMBER = 25;
@@ -25,7 +25,8 @@ public class HRImplementation implements HRInterface {
     private Map<Character, Integer> rooms;
     private Map<String, Map<Character, Integer>> guests;
 
-    public HRImplementation() {
+    public HRImplementation() throws java.rmi.RemoteException {
+        super();
         rooms = new HashMap<Character, Integer>(5);
         rooms.put('A', ROOM_TYPE_A_NUMBER);
         rooms.put('B', ROOM_TYPE_B_NUMBER);
@@ -36,7 +37,7 @@ public class HRImplementation implements HRInterface {
         guests = new HashMap<String, Map<Character, Integer>>();
     }
 
-    public Map<Character, Integer> listRooms() {
+    public Map<Character, Integer> listRooms() throws java.rmi.RemoteException {
         return rooms;
     }
 
@@ -63,17 +64,19 @@ public class HRImplementation implements HRInterface {
         if (rooms.get(type) < number)
             throw new Exception("not enough rooms of this type (" + 
                 rooms.get(type) + " < " + number + ")");
+        rooms.put(type, rooms.get(type) - number);
         if (!guests.containsKey(name))
             guests.put(name, new HashMap<Character, Integer>());
-        guests.get(name).put(type, number);
+        if (!guests.get(name).containsKey(type))
+            guests.get(name).put(type, number);
+        else
+            guests.get(name).put(type, guests.get(name).get(type) + number);
         return new Pair<Integer,Integer>(number, getRoomCost(type) * number);
     }
 
-    public Set<String> listGuests() {
-        Set<String> guestSet = new HashSet<String>();
-        for(var entrySet: guests.entrySet())
-            guestSet.add(entrySet.getKey());
-        return guestSet;
+    public Map<String, Map<Character, Integer>> listGuests() throws 
+        java.rmi.RemoteException {
+        return guests;
     }
 
     public Map<Character, Integer> cancelRoom(char type, int number, 
@@ -91,14 +94,17 @@ public class HRImplementation implements HRInterface {
             throw new Exception("guest has only booked " + booked_rooms + 
                 "rooms");
         
-        guests.get(name).put(type, booked_rooms -= number);
+        booked_rooms -= number;
+        guests.get(name).put(type, booked_rooms);
+        rooms.put(type, rooms.get(type) + number);
         
         if (booked_rooms == 0) {
             guests.get(name).remove(type);
-            if (guests.get(name).isEmpty());
+            if (guests.get(name).isEmpty())
                 guests.remove(name);
         }
 
+        
         if (guests.containsKey(name))
             return guests.get(name);
         else
