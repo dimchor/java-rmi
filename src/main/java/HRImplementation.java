@@ -1,11 +1,9 @@
 package main.java;
 
-import java.lang.annotation.Retention;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 /**
  * HRImplementation
