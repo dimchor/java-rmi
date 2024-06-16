@@ -60,6 +60,10 @@ public class HRImplementation extends java.rmi.server.UnicastRemoteObject
 
     public Pair<Integer, Integer> bookRoom(char type, int number, String name) 
         throws Exception {
+        if (type < 'A' || type > 'E')
+            throw new Exception("invalid room type");
+        if (number < 1)
+            throw new Exception("invalid number of rooms");
 
         if (rooms.get(type) < number)
             throw new Exception("not enough rooms of this type (" + 
@@ -81,6 +85,11 @@ public class HRImplementation extends java.rmi.server.UnicastRemoteObject
 
     public Map<Character, Integer> cancelRoom(char type, int number, 
         String name) throws Exception {
+
+        if (type < 'A' || type > 'E')
+            throw new Exception("invalid room type");
+        if (number < 1)
+            throw new Exception("invalid number of rooms");
 
         if (!guests.containsKey(name))
             throw new Exception("guest not found");
